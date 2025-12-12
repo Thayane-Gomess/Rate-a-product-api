@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Rotas de usuário
-app.use(userRoutes);
+// Rotas de usuário com prefixo
+app.use('/users', userRoutes);
 
 export default app;
