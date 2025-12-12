@@ -6,11 +6,37 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      String   @default("USER")
-  createdAt DateTime @default(now())
+  id         Int         @id @default(autoincrement())
+  name       String
+  email      String      @unique
+  password   String
+  role       String      @default("USER")
+  createdAt  DateTime    @default(now())
+  avaliacaos Avaliacao[]
+}
+
+model Produto {
+  id         Int         @id @default(autoincrement())
+  nome       String
+  descricao  String
+  preco      Float
+  createdAt  DateTime    @default(now())
+  deletedAt  DateTime? // soft delete
+  avaliacoes Avaliacao[]
+}
+
+model Avaliacao {
+  id         Int       @id @default(autoincrement())
+  nota       Int
+  comentario String
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  produto   Produto @relation(fields: [produtoId], references: [id])
+  produtoId Int
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
 }
