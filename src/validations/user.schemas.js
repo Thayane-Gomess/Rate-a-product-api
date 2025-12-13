@@ -1,8 +1,24 @@
 import { z } from "zod";
 
-// valida os dados de cadastro
+// Schema de REGISTRO
+// Valida os dados necessários para criar um novo usuário
 export const registerSchema = z.object({
-    name: z.string().min(2, "O nome deve ter pelo menos 2 caracteres"),
-    email: z.string().email("E-mail inválido"),
-    password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres")
+    // Nome obrigatório com no mínimo 2 caracteres
+    name: z.string().min(2, "Nome obrigatório"),
+
+    // Email deve ter formato válido
+    email: z.string().email("Email inválido"),
+
+    // Senha deve ter no mínimo 6 caracteres
+    password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
+});
+
+// Schema de LOGIN
+// Valida apenas as credenciais do usuário
+export const loginSchema = z.object({
+    // Email informado no login
+    email: z.string().email("Email inválido"),
+
+    // Senha informada no login
+    password: z.string().min(6, "Senha obrigatória"),
 });
