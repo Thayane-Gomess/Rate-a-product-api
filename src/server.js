@@ -1,5 +1,5 @@
 import app from "./app.js";
-import sequelize from "./config/database.js";
+import sequelize from "./database/index.js";
 
 // Importa os models para sincronizar com o banco
 import "./models/user.js";
