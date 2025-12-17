@@ -1,5 +1,7 @@
+
 node_modules/
 .env
 database.sqlite
 dev.db
+DATABASE_URL="file:./dev.db"
 

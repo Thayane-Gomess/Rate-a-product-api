@@ -1,10 +1,10 @@
-const { defineConfig } = require("@prisma/config");
+import { defineConfig } from "@prisma/client";
 
-module.exports = defineConfig({
+export default defineConfig({
   datasource: {
     db: {
-      adapter: "sqlite",
-      url: "file:./database.sqlite", // fixo, sem process.env
+      provider: "sqlite",
+      url: process.env.DATABASE_URL ?? "file:./dev.db",
     },
   },
 });

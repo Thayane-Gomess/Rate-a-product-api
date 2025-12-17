@@ -1,16 +1,16 @@
-const express = require('express');
+import express from "express";
+import productController from "../controllers/productController.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { isAdminMiddleware } from "../middleware/IsAdmin.js";
+
 const router = express.Router();
 
-const productController = require('../controllers/productController');
-const auth = require('../middleware/auth');
-const isAdmin = require('../middleware/IsAdmin');
-
 // Público
-router.get('/', productController.list);
+router.get("/", productController.list);
 
 // Apenas ADMIN
-router.post('/', auth, isAdmin, productController.create);
-router.put('/:id', auth, isAdmin, productController.update);
-router.delete('/:id', auth, isAdmin, productController.delete);
+router.post("/", authMiddleware, isAdminMiddleware, productController.create);
+router.put("/:id", authMiddleware, isAdminMiddleware, productController.update);
+router.delete("/:id", authMiddleware, isAdminMiddleware, productController.delete);
 
-module.exports = router;
+export default router;

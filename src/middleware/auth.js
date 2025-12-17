@@ -1,19 +1,19 @@
-const jwt = require('jsonwebtoken');
+import jwt from "jsonwebtoken";
 
-module.exports = (req, res, next) => {
+export const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({ error: 'Token não informado' });
+    return res.status(401).json({ error: "Token não informado" });
   }
 
-  const token = authHeader.replace('Bearer ', '');
+  const token = authHeader.replace("Bearer ", "");
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ error: 'Token inválido' });
+    return res.status(401).json({ error: "Token inválido" });
   }
 };
