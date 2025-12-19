@@ -32,6 +32,7 @@
   "homepage": "https://github.com/Thayane-Gomess/Rate-a-product-api#readme",
   "dependencies": {
     "@prisma/client": "^6.10.0",
+    "@supabase/supabase-js": "^2.89.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
