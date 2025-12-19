@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
 
-// Configuração do Supabase
-const supabaseUrl = 'https://npjiipvqeqxckioqskzt.supabase.co';
+// Configuração do Supabase usando variáveis de ambiente
+const supabaseUrl = process.env.SUPABASE_URL || 'https://npjiipvqeqxckioqskzt.supabase.co';
 const supabaseKey = process.env.SUPABASE_KEY || 'sua-chave-supabase-aqui';
 
 export const supabase = createClient(supabaseUrl, supabaseKey, {
@@ -15,7 +15,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey, {
 export async function testConnection() {
   try {
     const { data, error } = await supabase
-      .from('products') // Substitua por uma tabela existente
+      .from('Produto') // Ajuste para o nome da tabela que existe no seu schema
       .select('*')
       .limit(1);
     
