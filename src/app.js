@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
+// Health check (IMPORTANTE para Vercel)
 app.get("/", (req, res) => {
     res.status(200).json({
         status: "ok",
@@ -19,16 +19,13 @@ app.get("/", (req, res) => {
     });
 });
 
-
 // Rotas
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
 app.use("/reviews", reviewRoutes);
 
-// Swagger (documentação da API)
+// Swagger
 swagger(app);
-
-
 
 // Middleware de erro (sempre por último)
 app.use(errorHandler);
