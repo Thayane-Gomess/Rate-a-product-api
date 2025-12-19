@@ -4,8 +4,8 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 async function main() {
-  // cria usuário admin
   const adminPassword = await bcrypt.hash("admin123", 10);
+
   await prisma.user.upsert({
     where: { email: "admin@teste.com" },
     update: {},
@@ -17,8 +17,8 @@ async function main() {
     },
   });
 
-  // cria usuário comum
   const userPassword = await bcrypt.hash("user123", 10);
+
   const user = await prisma.user.upsert({
     where: { email: "user@teste.com" },
     update: {},
@@ -30,43 +30,24 @@ async function main() {
     },
   });
 
-  // cria produtos
   const notebook = await prisma.produto.create({
-    data: { name: "Notebook Dell", price: 3500 },
-  });
-
-  const celular = await prisma.produto.create({
-    data: { name: "Smartphone Samsung", price: 2500 },
-  });
-
-  // cria avaliações do usuário
-  await prisma.avaliacao.create({
     data: {
-      rating: 5,
-      comment: "Ótimo notebook, muito rápido!",
-      userId: user.id,
-      produtoId: notebook.id,
+      nome: "Notebook Dell",
+      descricao: "Notebook para trabalho",
+      preco: 3500,
     },
   });
 
   await prisma.avaliacao.create({
     data: {
-      rating: 4,
-      comment: "Celular bom, mas a bateria podia durar mais.",
+      nota: 5,
+      comentario: "Ótimo notebook, muito rápido!",
       userId: user.id,
-      produtoId: celular.id,
+      produtoId: notebook.id,
     },
   });
 }
 
 main()
-  .then(() => {
-    console.log("Seed executado com sucesso!");
-  })
-  .catch((e) => {
-    console.error("Erro no seed:", e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .then(() => console.log("Seed executado com sucesso!"))
+  .finally(async () => prisma.$disconnect());
