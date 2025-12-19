@@ -3,6 +3,8 @@ import app from "./app.js";
 
 dotenv.config();
 
-// Em ambiente serverless (Vercel), NÃO usamos app.listen
-// Apenas exportamos o app para o handler do Vercel
-export default app;
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
