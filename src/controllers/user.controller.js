@@ -1,9 +1,8 @@
 import userService from "../services/user.service.js";
 
-// Registro
+// Registra um novo usuário
 export const registerController = async (req, res) => {
   try {
-    // chama o service para criar o usuário
     const user = await userService.register(req.body);
 
     return res.status(201).json({
@@ -15,10 +14,9 @@ export const registerController = async (req, res) => {
   }
 };
 
-// Login
+// Autentica o usuário e gera token JWT
 export const loginController = async (req, res) => {
   try {
-    // chama o service para autenticar o usuário
     const token = await userService.login(req.body);
 
     return res.status(200).json({
@@ -30,10 +28,12 @@ export const loginController = async (req, res) => {
   }
 };
 
-// Profile
+// Retorna dados do usuário autenticado
 export const profileController = async (req, res) => {
   try {
-    const user = await userService.profile(req.user);
+    const userId = Number(req.userId);
+
+    const user = await userService.profile(userId);
 
     return res.status(200).json({
       message: "Perfil do usuário recuperado com sucesso!",

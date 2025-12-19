@@ -9,19 +9,24 @@ import {
 } from "../controllers/review.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { validateSchema } from "../middlewares/validateSchema.middleware.js";
-import { reviewSchema } from "../validations/review.schemas.js";
+import {
+  reviewSchema,
+  updateReviewSchema,
+} from "../validations/review.schemas.js";
 
 const router = Router();
 
 // ROTAS PÚBLICAS
-// Listar avaliações de um produto específico
+
+// Listar avaliações de um produto
 router.get("/product/:produtoId", listProductReviews);
 
-// Obter estatísticas de um produto
+// Estatísticas de um produto
 router.get("/product/:produtoId/stats", getProductStats);
 
-// ROTAS PROTEGIDAS (precisa estar logado)
-// Criar nova avaliação
+// ROTAS PROTEGIDAS
+
+// Criar avaliação
 router.post(
   "/",
   authMiddleware,
@@ -36,7 +41,7 @@ router.get("/my-reviews", authMiddleware, listMyReviews);
 router.put(
   "/:id",
   authMiddleware,
-  validateSchema(reviewSchema),
+  validateSchema(updateReviewSchema),
   updateReview
 );
 

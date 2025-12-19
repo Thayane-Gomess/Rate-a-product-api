@@ -1,34 +1,30 @@
 import jwt from "jsonwebtoken";
 
+// Middleware de autenticação via JWT
 export const authMiddleware = (req, res, next) => {
-    // Lê o header Authorization enviado pelo cliente
     const authHeader = req.headers.authorization;
 
-    // Se não houver token, bloqueia o acesso à rota protegida
+    // Verifica se o token foi enviado
     if (!authHeader) {
         return res.status(401).json({
-            message: "Token de autenticação não fornecido.",
+            message: "Token de autenticação não fornecido",
         });
     }
 
-    // Extrai apenas o token (remove o "Bearer")
+    // Extrai o token do header Bearer
     const [, token] = authHeader.split(" ");
 
     try {
-        // Valida o token usando a chave secreta
-        // Esse token é gerado no login
+        // Valida o token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // Armazena o id do usuário autenticado na requisição
-        // Será usado em controllers de rotas protegidas
+        // Salva o id do usuário autenticado
         req.userId = decoded.id;
 
-        // Permite o acesso à rota
         next();
     } catch (error) {
-        // Se o token for inválido ou estiver expirado, bloqueia o acesso
         return res.status(401).json({
-            message: "Token de autenticação inválido ou expirado.",
+            message: "Token inválido ou expirado",
         });
     }
 };

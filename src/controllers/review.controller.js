@@ -1,13 +1,13 @@
 import reviewService from "../services/reviews.service.js";
 
-// Criar uma nova avaliação
+// Cria uma nova avaliação (usuário autenticado)
 export const createReview = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = Number(req.userId);
 
     const reviewData = {
       ...req.body,
-      userId: parseInt(userId),
+      userId,
     };
 
     const review = await reviewService.create(reviewData);
@@ -21,13 +21,14 @@ export const createReview = async (req, res) => {
   }
 };
 
-// Listar avaliações de um produto específico
+// Lista avaliações de um produto específico (público)
 export const listProductReviews = async (req, res) => {
   try {
-    const { produtoId } = req.params;
-    const reviews = await reviewService.listByProduct(parseInt(produtoId));
+    const produtoId = Number(req.params.produtoId);
 
-    return res.json({
+    const reviews = await reviewService.listByProduct(produtoId);
+
+    return res.status(200).json({
       message: "Avaliações do produto",
       reviews,
     });
@@ -36,13 +37,14 @@ export const listProductReviews = async (req, res) => {
   }
 };
 
-// Listar minhas avaliações
+// Lista avaliações do usuário logado
 export const listMyReviews = async (req, res) => {
   try {
-    const userId = req.userId;
-    const reviews = await reviewService.listMyReviews(parseInt(userId));
+    const userId = Number(req.userId);
 
-    return res.json({
+    const reviews = await reviewService.listMyReviews(userId);
+
+    return res.status(200).json({
       message: "Minhas avaliações",
       reviews,
     });
@@ -51,19 +53,19 @@ export const listMyReviews = async (req, res) => {
   }
 };
 
-// Atualizar minha avaliação
+// Atualiza uma avaliação do próprio usuário
 export const updateReview = async (req, res) => {
   try {
-    const { id } = req.params;
-    const userId = req.userId;
+    const reviewId = Number(req.params.id);
+    const userId = Number(req.userId);
 
     const updatedReview = await reviewService.update(
-      parseInt(id),
-      parseInt(userId),
+      reviewId,
+      userId,
       req.body
     );
 
-    return res.json({
+    return res.status(200).json({
       message: "Avaliação atualizada com sucesso!",
       review: updatedReview,
     });
@@ -72,13 +74,13 @@ export const updateReview = async (req, res) => {
   }
 };
 
-// Deletar minha avaliação
+// Remove uma avaliação do próprio usuário (soft delete)
 export const deleteReview = async (req, res) => {
   try {
-    const { id } = req.params;
-    const userId = req.userId;
+    const reviewId = Number(req.params.id);
+    const userId = Number(req.userId);
 
-    await reviewService.delete(parseInt(id), parseInt(userId));
+    await reviewService.delete(reviewId, userId);
 
     return res.status(200).json({
       message: "Avaliação deletada com sucesso!",
@@ -88,13 +90,14 @@ export const deleteReview = async (req, res) => {
   }
 };
 
-// Obter estatísticas de um produto
+// Retorna estatísticas de avaliações de um produto (público)
 export const getProductStats = async (req, res) => {
   try {
-    const { produtoId } = req.params;
-    const stats = await reviewService.getProductStats(parseInt(produtoId));
+    const produtoId = Number(req.params.produtoId);
 
-    return res.json({
+    const stats = await reviewService.getProductStats(produtoId);
+
+    return res.status(200).json({
       message: "Estatísticas do produto",
       stats,
     });
