@@ -11,6 +11,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
+app.get("/", (req, res) => {
+    res.status(200).json({
+        status: "ok",
+        message: "Rate-a-Product API is running",
+    });
+});
+
+
 // Rotas
 app.use("/users", userRoutes);
 app.use("/products", productRoutes);
@@ -18,6 +27,8 @@ app.use("/reviews", reviewRoutes);
 
 // Swagger (documentação da API)
 swagger(app);
+
+
 
 // Middleware de erro (sempre por último)
 app.use(errorHandler);
