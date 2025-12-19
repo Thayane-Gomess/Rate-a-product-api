@@ -16,17 +16,21 @@ import {
 
 const router = Router();
 
-// ROTAS PÚBLICAS
+// --- ROTAS PÚBLICAS ---
 
-// Listar avaliações de um produto
+// Listar avaliações de um produto específico
 router.get("/product/:produtoId", listProductReviews);
 
-// Estatísticas de um produto
+// Estatísticas (média, total) de um produto
 router.get("/product/:produtoId/stats", getProductStats);
 
-// ROTAS PROTEGIDAS
 
-// Criar avaliação
+// --- ROTAS PROTEGIDAS (Requer Login) ---
+
+// IMPORTANTE: Rotas fixas (como /my-reviews) devem vir antes de rotas com /:id
+router.get("/my-reviews", authMiddleware, listMyReviews);
+
+// Criar avaliação (O schema já valida se produtoId está no body)
 router.post(
   "/",
   authMiddleware,
@@ -34,10 +38,7 @@ router.post(
   createReview
 );
 
-// Listar minhas avaliações
-router.get("/my-reviews", authMiddleware, listMyReviews);
-
-// Atualizar minha avaliação
+// Atualizar avaliação (Apenas a própria avaliação)
 router.put(
   "/:id",
   authMiddleware,
@@ -45,7 +46,7 @@ router.put(
   updateReview
 );
 
-// Deletar minha avaliação
+// Deletar avaliação (Soft delete)
 router.delete("/:id", authMiddleware, deleteReview);
 
 export default router;

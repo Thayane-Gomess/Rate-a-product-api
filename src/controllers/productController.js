@@ -8,24 +8,24 @@ const productController = {
 
       const product = await prisma.produto.create({
         data: {
-          nome: name,
-          descricao: description,
-          preco: price,
+          nome: name,        // Mapeando 'name' para 'nome' no banco
+          descricao: description, // Mapeando 'description' para 'descricao'
+          preco: price,      // Mapeando 'price' para 'preco'
         },
       });
 
       return res.status(201).json(product);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: "Erro ao criar produto" });
+      console.error("Erro ao criar produto:", error);
+      return res.status(500).json({ error: "Erro interno ao criar produto" });
     }
   },
 
   // Lista produtos ativos com paginação (público)
   async list(req, res) {
     try {
-      const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 10;
+      const page = Math.max(1, Number(req.query.page) || 1);
+      const limit = Math.max(1, Number(req.query.limit) || 10);
       const skip = (page - 1) * limit;
 
       const products = await prisma.produto.findMany({
@@ -47,7 +47,7 @@ const productController = {
         data: products,
       });
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao listar produtos:", error);
       return res.status(500).json({ error: "Erro ao listar produtos" });
     }
   },
@@ -56,6 +56,12 @@ const productController = {
   async update(req, res) {
     try {
       const productId = Number(req.params.id);
+
+      // Valida se o ID é um número válido
+      if (isNaN(productId)) {
+        return res.status(400).json({ error: "ID do produto inválido" });
+      }
+
       const { name, description, price } = req.body;
 
       const product = await prisma.produto.findUnique({
@@ -63,21 +69,21 @@ const productController = {
       });
 
       if (!product || product.deletedAt) {
-        return res.status(404).json({ error: "Produto não encontrado" });
+        return res.status(404).json({ error: "Produto não encontrado ou removido" });
       }
 
       const updatedProduct = await prisma.produto.update({
         where: { id: productId },
         data: {
-          nome: name,
-          descricao: description,
-          preco: price,
+          nome: name !== undefined ? name : product.nome,
+          descricao: description !== undefined ? description : product.descricao,
+          preco: price !== undefined ? price : product.preco,
         },
       });
 
       return res.status(200).json(updatedProduct);
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao atualizar produto:", error);
       return res.status(500).json({ error: "Erro ao atualizar produto" });
     }
   },
@@ -86,6 +92,10 @@ const productController = {
   async delete(req, res) {
     try {
       const productId = Number(req.params.id);
+
+      if (isNaN(productId)) {
+        return res.status(400).json({ error: "ID do produto inválido" });
+      }
 
       const product = await prisma.produto.findUnique({
         where: { id: productId },
@@ -102,7 +112,7 @@ const productController = {
 
       return res.status(204).send();
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao deletar produto:", error);
       return res.status(500).json({ error: "Erro ao deletar produto" });
     }
   },

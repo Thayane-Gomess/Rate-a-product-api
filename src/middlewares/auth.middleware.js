@@ -12,7 +12,7 @@ export const authMiddleware = (req, res, next) => {
     }
 
     // Extrai o token do header Bearer
-    const [, token] = authHeader.split(" ");
+    const token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : authHeader;
 
     try {
         // Valida o token
